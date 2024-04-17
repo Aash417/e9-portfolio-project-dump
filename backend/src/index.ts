@@ -12,8 +12,17 @@ app.get('/', (c) => {
 	return c.text('Hello Hono!');
 });
 
-app.get('/all', (c) => {
-	return c.text('Hello Hono!');
+app.get('/all', async (c) => {
+	const prisma = new PrismaClient({
+		datasourceUrl: c.env?.DATABASE_URL,
+	}).$extends(withAccelerate());
+
+	const allProjects = await prisma.projects.findMany({});
+
+	return c.json({
+		msg: 'success',
+		data: allProjects,
+	});
 });
 
 app.post('/add', async (c) => {
@@ -21,13 +30,14 @@ app.post('/add', async (c) => {
 		datasourceUrl: c.env?.DATABASE_URL,
 	}).$extends(withAccelerate());
 
+	const { name, stack, imageLink, githubLink, liveLink } = await c.req.json();
 	const entry = await prisma.projects.create({
 		data: {
-			name: 'one',
-			stack: 'html css js',
-			githubLink: 'o',
-			liveLink: 'o',
-			imageLink: 'o',
+			name,
+			stack,
+			imageLink,
+			githubLink,
+			liveLink,
 		},
 	});
 
