@@ -19,6 +19,10 @@ interface UploadedFile {
 }
 
 export async function uploadProject(req: Request, res: Response) {
+  console.log('req.file :', req.file);
+  console.log('req.files :', req.files);
+  console.log('req.body :', req.body);
+
   const localFilePath = req.file.path;
   const uploadedAvatar = await uploadOnCloudinary(localFilePath);
 

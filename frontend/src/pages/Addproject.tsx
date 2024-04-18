@@ -1,18 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import { useNavigate } from 'react-router-dom';
-
-async function uploadData(data) {
-	await axios.post(
-		'http://localhost:4000/add',
-		{ data },
-		{
-			withCredentials: true,
-		}
-	);
-}
 
 function Addproject() {
 	const { register, handleSubmit } = useForm();
@@ -20,27 +11,33 @@ function Addproject() {
 	const queryclient = useQueryClient();
 
 	const { mutate, isSuccess } = useMutation({
-		mutationFn: uploadData,
+		mutationFn: async (data: any) => {
+			const formData = new FormData();
+			formData.append('name', data.name);
+			formData.append('stack', data.stack);
+			formData.append('githubLink', data.githubLink);
+			formData.append('liveLink', data.liveLink);
+			formData.append('image', data.image[0]); // Assuming you're allowing only one file upload
+			try {
+				await axios.post('http://localhost:4000/add', formData, {
+					withCredentials: true,
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				});
+				queryclient.invalidateQueries({ queryKey: ['project'] });
+			} catch (error) {
+				console.error('Error submitting form:', error);
+			}
+		},
 		onSuccess: () => {
-			queryclient.invalidateQueries({
-				queryKey: ['project'],
-			});
+			queryclient.invalidateQueries({ queryKey: ['project'] });
+			toast.success('entry created.');
 		},
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const onSubmit = (data: any) => {
-		console.log(data);
-		console.log(data.name);
-		// mutate(data);
-		const formData = new FormData();
-		formData.append('name', 'kl');
-		formData.append('stack', data.stack);
-		formData.append('githubLink', data.githubLink);
-		formData.append('LiveLink', data.LiveLink);
-		formData.append('image', data.image[0]); // Assuming you're allowing only one image to be uploaded
-		console.log([...formData]);
-		// mutate(formData);
+	const onSubmit = async (data) => {
+		mutate(data);
 	};
 
 	return (
@@ -91,7 +88,7 @@ function Addproject() {
 					<input
 						{...register('image')}
 						type='file'
-						id='coverimage'
+						id='image'
 						className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
 					/>
 				</div>
