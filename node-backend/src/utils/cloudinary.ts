@@ -14,6 +14,7 @@ const uploadOnCloudinary = async (localFilePath: string) => {
     const res: UploadApiResponse = await cloudinary.uploader.upload(
       localFilePath,
       {
+        folder: 'portfolio-coverImages',
         resource_type: 'auto',
       }
     );
@@ -30,3 +31,4 @@ const uploadOnCloudinary = async (localFilePath: string) => {
 };
 
 export { uploadOnCloudinary };
+

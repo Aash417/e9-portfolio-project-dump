@@ -10,8 +10,8 @@ import {
 
 export default function ProjectList() {
 	return (
-		<div className='flex flex-col items-center h-screen'>
-			<Card className='w-4/5'>
+		<div className='flex flex-col items-center h-screen bg-slate-700'>
+			<Card className='w-3/5'>
 				<CardHeader>
 					<CardTitle>Projects</CardTitle>
 					<CardDescription>personal projects training grounds.</CardDescription>
@@ -21,7 +21,7 @@ export default function ProjectList() {
 				</CardContent>
 				<CardFooter>
 					<div className='text-xs text-muted-foreground'>
-						Showing <strong>1-10</strong> of <strong>32</strong> products
+						{/* Showing <strong>1-10</strong> of <strong>32</strong> products */}
 					</div>
 				</CardFooter>
 			</Card>

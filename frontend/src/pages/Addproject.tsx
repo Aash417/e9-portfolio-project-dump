@@ -6,18 +6,19 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 function Addproject() {
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit, reset } = useForm();
 	const navigate = useNavigate();
 	const queryclient = useQueryClient();
 
-	const { mutate, isSuccess } = useMutation({
+	const { mutate } = useMutation({
 		mutationFn: async (data: any) => {
 			const formData = new FormData();
 			formData.append('name', data.name);
 			formData.append('stack', data.stack);
 			formData.append('githubLink', data.githubLink);
 			formData.append('liveLink', data.liveLink);
-			formData.append('image', data.image[0]); // Assuming you're allowing only one file upload
+			formData.append('image', data.image[0]);
+
 			try {
 				await axios.post('http://localhost:4000/add', formData, {
 					withCredentials: true,
@@ -32,6 +33,7 @@ function Addproject() {
 		},
 		onSuccess: () => {
 			queryclient.invalidateQueries({ queryKey: ['project'] });
+			reset();
 			toast.success('entry created.');
 		},
 	});
@@ -41,13 +43,13 @@ function Addproject() {
 	};
 
 	return (
-		<>
+		<div className='flex h-screen bg-slate-400'>
 			<div className=''>
 				<button onClick={() => navigate('/')}>home</button>
 			</div>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className='flex flex-col justify-center h-screen max-w-sm mx-auto'
+				className='flex flex-col justify-center max-w-sm mx-auto align-middle'
 			>
 				<div className='mb-5'>
 					<label
@@ -128,7 +130,7 @@ function Addproject() {
 					Submit
 				</button>
 			</form>
-		</>
+		</div>
 	);
 }
 
