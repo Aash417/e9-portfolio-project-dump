@@ -1,65 +1,53 @@
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { FaGithub } from 'react-icons/fa';
 import { PiLinkSimpleBold } from 'react-icons/pi';
+import { HashLoader } from 'react-spinners';
 
-const invoices = [
-	{
-		invoice: 'INV001',
-		paymentStatus: 'Paid',
-		totalAmount: '$250.00',
-		paymentMethod:
-			'CCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit CardCredit Cardredit Card',
-	},
-	{
-		invoice: 'INV002',
-		paymentStatus: 'Pending',
-		totalAmount: '$150.00',
-		paymentMethod: 'PayPal',
-	},
-	{
-		invoice: 'INV003',
-		paymentStatus: 'Unpaid',
-		totalAmount: '$350.00',
-		paymentMethod: 'Bank Transfer',
-	},
-	{
-		invoice: 'INV004',
-		paymentStatus: 'Paid',
-		totalAmount: '$450.00',
-		paymentMethod: 'Credit Card',
-	},
-	{
-		invoice: 'INV005',
-		paymentStatus: 'Paid',
-		totalAmount: '$550.00',
-		paymentMethod: 'PayPal',
-	},
-	{
-		invoice: 'INV006',
-		paymentStatus: 'Pending',
-		totalAmount: '$200.00',
-		paymentMethod: 'Bank Transfer',
-	},
-	{
-		invoice: 'INV007',
-		paymentStatus: 'Unpaid',
-		totalAmount: '$300.00',
-		paymentMethod: 'Credit Card',
-	},
-];
+async function getProjectList(): Promise<datatype> {
+	return await axios.get(`${import.meta.env.VITE_BackendUrl}/all`, {
+		withCredentials: true,
+	});
+}
 
-export function TableDemo() {
+type projectType = {
+	id: number;
+	stack: string;
+	imageLink: string;
+	githubLink: string;
+	liveLink: string;
+	name: string;
+};
+
+type datatype = {
+	allProjects: projectType[];
+};
+
+export function ProjectListTable() {
+	const { data, isLoading } = useQuery({
+		queryKey: ['project'],
+		queryFn: getProjectList,
+	});
+
+	const projects = data?.data?.allProjects;
+
+	if (isLoading)
+		return (
+			<div className='flex flex-col items-center'>
+				<HashLoader />
+			</div>
+		);
+
 	return (
 		<Table>
-			<TableCaption>A list of your recent invoices.</TableCaption>
 			<TableHeader>
 				<TableRow>
 					<TableHead className='hidden sm:table-cell'>
@@ -71,27 +59,27 @@ export function TableDemo() {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{invoices.map((invoice) => (
-					<TableRow key={invoice.invoice}>
+				{projects.map((project: projectType) => (
+					<TableRow key={project.id}>
 						<TableCell className=''>
 							<div className='grid '>
 								<div>
 									<img
-										className='h-22 w-20 rounded-lg'
-										src='https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg'
+										className='h-20 rounded-lg w-28'
+										src={project.imageLink}
 										alt=''
 									/>
 								</div>
 							</div>
 						</TableCell>
-						<TableCell>{invoice.paymentStatus}</TableCell>
-						<TableCell className='max-w-44'>{invoice.paymentMethod}</TableCell>
+						<TableCell className='font-bold'>{project.name}</TableCell>
+						<TableCell className='max-w-44'>{project.stack}</TableCell>
 						<TableCell className='text-right'>
-							<div className='flex gap-4 justify-center'>
-								<a href=''>
+							<div className='flex justify-center gap-4'>
+								<a href={project.githubLink} target='_blank'>
 									<FaGithub size={25} />
 								</a>
-								<a href=''>
+								<a href={project.liveLink} target='_blank'>
 									<PiLinkSimpleBold size={25} />
 								</a>
 							</div>
