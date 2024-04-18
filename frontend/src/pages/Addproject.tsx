@@ -1,17 +1,56 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
+
+import { useNavigate } from 'react-router-dom';
+
+async function uploadData(data) {
+	await axios.post(
+		'http://localhost:4000/add',
+		{ data },
+		{
+			withCredentials: true,
+		}
+	);
+}
 
 function Addproject() {
 	const { register, handleSubmit } = useForm();
+	const navigate = useNavigate();
+	const queryclient = useQueryClient();
+
+	const { mutate, isSuccess } = useMutation({
+		mutationFn: uploadData,
+		onSuccess: () => {
+			queryclient.invalidateQueries({
+				queryKey: ['project'],
+			});
+		},
+	});
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const onSubmit = (data: any) => {
 		console.log(data);
+		console.log(data.name);
+		// mutate(data);
+		const formData = new FormData();
+		formData.append('name', 'kl');
+		formData.append('stack', data.stack);
+		formData.append('githubLink', data.githubLink);
+		formData.append('LiveLink', data.LiveLink);
+		formData.append('image', data.image[0]); // Assuming you're allowing only one image to be uploaded
+		console.log([...formData]);
+		// mutate(formData);
 	};
 
 	return (
 		<>
+			<div className=''>
+				<button onClick={() => navigate('/')}>home</button>
+			</div>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className='max-w-sm mx-auto flex flex-col justify-center h-screen'
+				className='flex flex-col justify-center h-screen max-w-sm mx-auto'
 			>
 				<div className='mb-5'>
 					<label
@@ -50,7 +89,7 @@ function Addproject() {
 						Cover image
 					</label>
 					<input
-						{...register('imageLink')}
+						{...register('image')}
 						type='file'
 						id='coverimage'
 						className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
