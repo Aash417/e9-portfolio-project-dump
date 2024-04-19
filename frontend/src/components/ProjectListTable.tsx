@@ -37,14 +37,15 @@ export function ProjectListTable() {
 		queryFn: getProjectList,
 	});
 
-	const projects = data?.data?.allProjects;
-
 	if (isLoading)
 		return (
 			<div className='flex flex-col items-center'>
 				<HashLoader />
 			</div>
 		);
+
+	const projects = data?.data?.allProjects;
+	const sortedData = projects.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
 
 	return (
 		<Table>
@@ -59,7 +60,7 @@ export function ProjectListTable() {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{projects.map((project: projectType) => (
+				{sortedData.map((project: projectType) => (
 					<TableRow key={project.id}>
 						<TableCell className=''>
 							<div className='grid '>

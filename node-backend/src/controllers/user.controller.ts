@@ -2,20 +2,25 @@ import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { uploadOnCloudinary } from '../utils/cloudinary';
 
+const prismaClientSingleton = () => {
+  return new PrismaClient();
+};
+
+declare global {
+  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
+}
+
+const prisma: ReturnType<typeof prismaClientSingleton> =
+  globalThis.prismaGlobal ?? prismaClientSingleton();
+
+export default prisma;
+
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;
+
 export async function test(req: Request, res: Response) {
   res.status(200).json({
     message: 'ok',
   });
-}
-interface UploadedFile {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  destination: string;
-  filename: string;
-  path: string;
-  size: number;
 }
 
 export async function uploadProject(req: Request, res: Response) {
