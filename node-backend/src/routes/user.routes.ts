@@ -5,5 +5,5 @@ import { upload } from '../middlewares/multer.middleware';
 const router = Router();
 
 router.route('/add').get(test).post(upload.single('image'), uploadProject);
-router.route('/fetchAll').get(fetchAll);
+router.route('/all').get(fetchAll);
 export default router;

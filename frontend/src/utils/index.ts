@@ -14,7 +14,7 @@ type datatype = {
 };
 
 export async function getProjectList(): Promise<datatype> {
-	return await axios.get(`${import.meta.env.VITE_BackendUrl}/fetchAll`, {
+	return await axios.get(`${import.meta.env.VITE_BackendUrl}/all`, {
 		withCredentials: true,
 	});
 }
