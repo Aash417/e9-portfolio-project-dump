@@ -25,7 +25,7 @@ app.get('/all', async (c) => {
 		datasourceUrl: c.env?.DATABASE_URL,
 	}).$extends(withAccelerate());
 
-	const allProjects = await prisma.projects.findMany({});
+	const allProjects = await prisma.projects.findMany();
 
 	return c.json({
 		allProjects,

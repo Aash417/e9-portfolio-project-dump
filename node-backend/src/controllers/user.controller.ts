@@ -48,3 +48,12 @@ export async function uploadProject(req: Request, res: Response) {
     project,
   });
 }
+
+export async function fetchAll(req: Request, res: Response) {
+
+	const allProjects = await prisma.projects.findMany();
+
+	return res.json({
+		allProjects,
+	});
+};

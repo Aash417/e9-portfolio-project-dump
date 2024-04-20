@@ -6,30 +6,11 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { getProjectList, projectType } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { FaGithub } from 'react-icons/fa';
 import { PiLinkSimpleBold } from 'react-icons/pi';
 import { HashLoader } from 'react-spinners';
-
-async function getProjectList(): Promise<datatype> {
-	return await axios.get(`${import.meta.env.VITE_BackendUrl}/all`, {
-		withCredentials: true,
-	});
-}
-
-type projectType = {
-	id: number;
-	stack: string;
-	imageLink: string;
-	githubLink: string;
-	liveLink: string;
-	name: string;
-};
-
-type datatype = {
-	allProjects: projectType[];
-};
 
 export function ProjectListTable() {
 	const { data, isLoading } = useQuery({
@@ -45,12 +26,15 @@ export function ProjectListTable() {
 		);
 
 	const projects = data?.data?.allProjects;
-	const sortedData = projects.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
+	const sortedData = projects.sort((a: { id: number }, b: { id: number }) => a.id - b.id);
 
 	return (
 		<Table>
 			<TableHeader>
 				<TableRow>
+					<TableHead className='hidden sm:table-cell'>
+						<span className='sr-only'>Sr no</span>
+					</TableHead>
 					<TableHead className='hidden sm:table-cell'>
 						<span className='sr-only'>Image</span>
 					</TableHead>
@@ -60,8 +44,9 @@ export function ProjectListTable() {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{sortedData.map((project: projectType) => (
+				{sortedData.map((project: projectType, i) => (
 					<TableRow key={project.id}>
+						<TableCell>{i + 1}</TableCell>
 						<TableCell className=''>
 							<div className='grid '>
 								<div>
