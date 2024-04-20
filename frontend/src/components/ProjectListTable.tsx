@@ -26,7 +26,7 @@ export function ProjectListTable() {
 		);
 
 	const projects = data?.data?.allProjects;
-	const sortedData = projects.sort((a: { id: number }, b: { id: number }) => a.id - b.id);
+	const sortedData = projects.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
 
 	return (
 		<Table>
