@@ -24,9 +24,8 @@ export function ProjectListTable() {
 				<HashLoader />
 			</div>
 		);
-
 	const projects = data?.data?.allProjects;
-	const sortedData = projects.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
+	const sortedData = projects?.sort((a: { id: number }, b: { id: number }) => b.id - a.id);
 
 	return (
 		<Table>
@@ -44,7 +43,7 @@ export function ProjectListTable() {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{sortedData.map((project: projectType, i) => (
+				{sortedData?.map((project: projectType, i) => (
 					<TableRow key={project.id}>
 						<TableCell>{i + 1}</TableCell>
 						<TableCell className=''>

@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-
 import { useNavigate } from 'react-router-dom';
 
 function Addproject() {
@@ -11,7 +10,7 @@ function Addproject() {
 	const queryclient = useQueryClient();
 
 	const { mutate } = useMutation({
-		mutationFn: async (data: any) => {
+		mutationFn: async (data: FieldValues) => {
 			const formData = new FormData();
 			formData.append('name', data.name);
 			formData.append('stack', data.stack);
@@ -38,7 +37,7 @@ function Addproject() {
 		},
 	});
 
-	const onSubmit = async (data) => {
+	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 		mutate(data);
 	};
 

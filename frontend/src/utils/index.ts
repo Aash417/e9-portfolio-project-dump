@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
 export type projectType = {
@@ -9,11 +10,18 @@ export type projectType = {
 	name: string;
 };
 
-type datatype = {
-	allProjects: projectType[];
-};
+interface ApiResponse {
+	config: any;
+	data: {
+		allProjects: projectType[];
+	};
+	headers: any;
+	request: any;
+	status: number;
+	statusText: string;
+}
 
-export async function getProjectList(): Promise<datatype> {
+export async function getProjectList(): Promise<ApiResponse> {
 	return await axios.get(`${import.meta.env.VITE_BackendUrl}/all`, {
 		withCredentials: true,
 	});
