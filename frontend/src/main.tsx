@@ -12,15 +12,20 @@ const Addproject = React.lazy(() => import('./pages/Addproject'));
 const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <ProjectGrid />,
-	},
-	{
-		path: '/list',
-		element: <ProjectList />,
-	},
-	{
-		path: '/add',
-		element: <Addproject />,
+		children: [
+			{
+				path: '/',
+				element: <ProjectGrid />,
+			},
+			{
+				path: '/list',
+				element: <ProjectList />,
+			},
+			{
+				path: '/add',
+				element: <Addproject />,
+			},
+		],
 	},
 ]);
 
