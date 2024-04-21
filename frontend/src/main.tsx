@@ -3,6 +3,7 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'react-hot-toast';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import App from './App';
 import './index.css';
 
 const ProjectGrid = React.lazy(() => import('./pages/ProjectGrid'));
@@ -12,6 +13,7 @@ const Addproject = React.lazy(() => import('./pages/Addproject'));
 const router = createBrowserRouter([
 	{
 		path: '/',
+		element: <App />,
 		children: [
 			{
 				path: '/',
